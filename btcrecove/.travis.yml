@@ -1,0 +1,85 @@
+# Run BTCRecover tests on all supported platforms and python versions
+language: python            # this works for Linux but is an error on macOS or Windows
+jobs:
+  include:
+    - name: "Python 3.9 on Bionic Linux"
+      dist: bionic
+      Python: # this works for Linux but is ignored on macOS or Windows
+        - 3.9
+    - name: "Python 3.8 on Bionic Linux"
+      dist: bionic
+      Python:               # this works for Linux but is ignored on macOS or Windows
+        - 3.8
+    - name: "Python 3.8 on Bionic Linux (With all Optional modules)"
+      dist: bionic
+      Python: # this works for Linux but is ignored on macOS or Windows
+        - 3.8
+      before_install:
+        - pip3 install -r requirements-full.txt
+    - name: "Python 3.7 on Bionic Linux"
+      dist: bionic
+      Python:               # this works for Linux but is ignored on macOS or Windows
+        - 3.7
+    - name: "Python 3.6 on Bionic Linux"
+      dist: bionic
+      Python:               # this works for Linux but is ignored on macOS or Windows
+        - 3.6
+    - name: "Python 3.8.6 on macOS 10.15.7"
+      os: osx
+      osx_image: xcode12.2  # Python 3.8.6 running on macOS 10.15.7
+      language: shell       # 'language: python' is an error on Travis CI macOS
+    - name: "Python 3.8.6 on macOS 10.15.7 (With all optional modules)"
+      os: osx
+      osx_image: xcode12.2  # Python 3.8.6 running on macOS 10.15.7
+      language: shell       # 'language: python' is an error on Travis CI macOS
+      before_install:
+        - pip3 install -r requirements-full.txt
+    - name: "Python 3.7.7 on macOS 10.14"
+      os: osx
+      osx_image: xcode11.4  # Python 3.7.7 running on macOS 10.14.6
+      language: shell       # 'language: python' is an error on Travis CI macOS
+    - name: "Python 3.9.0 on Windows"
+      os: windows           # Windows 10.0.17134 N/A Build 17134
+      language: shell       # 'language: python' is an error on Travis CI Windows
+      before_install:
+        - choco install python --version 3.9.0
+        - python -m pip install --upgrade pip
+      env: PATH=/c/Python39:/c/Python39/Scripts:$PATH
+    - name: "Python 3.8.0 on Windows"
+      os: windows           # Windows 10.0.17134 N/A Build 17134
+      language: shell       # 'language: python' is an error on Travis CI Windows
+      before_install:
+        - choco install python --version 3.8.0
+        - python -m pip install --upgrade pip
+      env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
+    - name: "Python 3.8.0 on Windows (With all optional modules)"
+      os: windows           # Windows 10.0.17134 N/A Build 17134
+      language: shell       # 'language: python' is an error on Travis CI Windows
+      before_install:
+        - choco install python --version 3.8.0
+        - python -m pip install --upgrade pip
+        - pip3 install -r requirements-full.txt
+      env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
+    - name: "Python 3.7.0 on Windows"
+      os: windows           # Windows 10.0.17134 N/A Build 17134
+      language: shell       # 'language: python' is an error on Travis CI Windows
+      before_install:
+        - choco install python --version 3.7.0
+        - python -m pip install --upgrade pip
+      env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+    - name: "Python 3.6.0 on Windows"
+      os: windows           # Windows 10.0.17134 N/A Build 17134
+      language: shell       # 'language: python' is an error on Travis CI Windows
+      before_install:
+        - choco install python --version 3.6.0
+        - python -m pip install --upgrade pip
+      env: PATH=/c/Python36:/c/Python36/Scripts:$PATH
+  allow_failures:
+#    - env: PATH=/c/Python39:/c/Python39/Scripts:$PATH
+#    - env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+#    - env: PATH=/c/Python36:/c/Python36/Scripts:$PATH
+install: pip3 install -r requirements.txt
+# 'python' points to Python 2.7 on macOS but points to Python 3.8 on Linux and Windows
+# 'python3' is a 'command not found' error on Windows but 'py' works on Windows only
+script: python3 run-all-tests.py --no-pause -vv || python run-all-tests.py --no-pause -vv
+
